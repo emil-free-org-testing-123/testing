@@ -1,13 +1,11 @@
-name: bench-namespace
+name: bench-namespace-micro
 on: workflow_dispatch
 jobs:
-  ci:
+  micro:
     runs-on: namespace-profile-emil
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npm ci --ignore-scripts
-        working-directory: gha-bench
-      - run: node --version && ls gha-bench/node_modules | wc -l
+      - run: gha-bench/micro.sh
