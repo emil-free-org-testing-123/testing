@@ -1,0 +1,17 @@
+name: bench-depot-sizes
+on: workflow_dispatch
+jobs:
+  ci:
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [depot-ubuntu-24.04-4, depot-ubuntu-24.04-8, depot-ubuntu-24.04-16]
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci --ignore-scripts
+        working-directory: gha-bench
+      - run: gha-bench/micro.sh
