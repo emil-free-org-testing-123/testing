@@ -15,7 +15,7 @@ jobs:
     steps:
       - name: restore
         id: restore
-        uses: actions/cache/restore@v4
+        uses: WarpBuilds/cache/restore@v1
         with:
           path: cachedata
           key: bench-warpcache-${{ inputs.size_mb }}-${{ inputs.round }}
@@ -24,7 +24,7 @@ jobs:
         run: mkdir -p cachedata && head -c ${{ inputs.size_mb }}M /dev/urandom > cachedata/blob
       - name: save
         if: steps.restore.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
+        uses: WarpBuilds/cache/save@v1
         with:
           path: cachedata
           key: bench-warpcache-${{ inputs.size_mb }}-${{ inputs.round }}
