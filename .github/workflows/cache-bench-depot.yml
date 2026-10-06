@@ -1,0 +1,32 @@
+# Template for cache-bench.sh: depot-ubuntu-24.04 and depot are substituted per vendor.
+# One job: restore a cache, and on a miss generate random data and save it.
+# Random data, because zeros compress to nothing.
+name: cache-bench-depot
+on:
+  workflow_dispatch:
+    inputs:
+      size_mb:
+        required: true
+      round:
+        required: true
+jobs:
+  cache:
+    runs-on: depot-ubuntu-24.04
+    steps:
+      - name: restore
+        id: restore
+        uses: actions/cache/restore@v4
+        with:
+          path: cachedata
+          key: bench-depot-${{ inputs.size_mb }}-${{ inputs.round }}
+      - name: generate
+        if: steps.restore.outputs.cache-hit != 'true'
+        run: mkdir -p cachedata && head -c ${{ inputs.size_mb }}M /dev/urandom > cachedata/blob
+      - name: save
+        if: steps.restore.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: cachedata
+          key: bench-depot-${{ inputs.size_mb }}-${{ inputs.round }}
+      - name: verify
+        run: ls -l cachedata
