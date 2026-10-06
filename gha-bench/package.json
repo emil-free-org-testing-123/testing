@@ -1,0 +1,2 @@
+{"name":"gha-sandbox-test","version":"1.0.0","private":true,
+ "devDependencies":{"typescript":"5.6.3","eslint":"9.14.0","jest":"29.7.0","webpack":"5.96.1","@babel/core":"7.26.0"}}
