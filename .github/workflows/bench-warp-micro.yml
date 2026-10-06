@@ -1,0 +1,11 @@
+name: bench-warp-micro
+on: workflow_dispatch
+jobs:
+  micro:
+    runs-on: warp-ubuntu-2404-x64-4x
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: gha-bench/micro.sh
