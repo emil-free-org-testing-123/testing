@@ -99,6 +99,47 @@ Namespace 25 to 33 MB/s.
   not match Depot.
 - Restore time grows roughly with size. Nothing above 2 GB was measured.
 
+## Ranking by speed
+
+Ranked by median where there are enough samples. Three to five samples per cell,
+so treat close calls as ties.
+
+Whole CI job, dispatch to done (five rounds each):
+
+| Rank | Runner | Median | Range |
+| --- | --- | --- | --- |
+| 1 | WarpBuild | 16 s | 13 to 26 s |
+| 2 | GitHub-hosted | 18 s | 14 to 21 s |
+| 3 | Namespace | 35 s | 15 to 41 s |
+| 4 | Depot | 43 s | 40 to 58 s |
+
+Raw compute, microbenchmark:
+
+| Rank | Runner | CPU loop | `npm ci` warm cache |
+| --- | --- | --- | --- |
+| 1 | Namespace | 0.30 to 0.32 s | 1.9 to 2.4 s |
+| 2 | WarpBuild | 0.35 s | 1.8 to 2.5 s |
+| 3 | Depot | 0.36 s | 1.2 to 1.35 s |
+| 4 | GitHub-hosted | 0.36 to 0.58 s | 2.4 to 4.7 s |
+
+On warm-cache `npm ci` alone, Depot is the fastest.
+
+Large cache restore with `actions/cache`:
+
+| Rank | Runner | 1 GB | 2 GB (median) |
+| --- | --- | --- | --- |
+| 1 | Depot | 6 s | 12 s |
+| 2 | WarpBuild, `WarpBuilds/cache@v1` | 18 to 25 s | 27 s |
+| 3 | GitHub-hosted | 19 to 23 s | 34 s |
+| 4 | Namespace | 18 to 57 s | 63 s |
+| 5 | WarpBuild, plain `actions/cache` | 8 to 54 s | 123 s |
+
+WarpBuild's plain `actions/cache` is erratic, so its 1 GB figure is not a reliable
+rank.
+
+Start gap after GitHub marks the job started: Depot 21 to 32 s, every other runner
+0 to 1 s. See the note on Depot Metal above.
+
 ## Summary
 
 | | Start | Compute | Large cache restore |
